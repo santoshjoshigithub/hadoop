@@ -1,0 +1,27 @@
+Note: Following is for Hortonworks, commands may differ for Cloudera, MapR or other providers.
+
+1. Some Useful MySQL commands:
+
+a) mysql -u root -p
+b) create database <db-name>;
+c) show databases;
+d) use <db-name>;
+e) show tables;
+f) describe <tables-name>;
+g) create table <table_name>(id integer, title varchar(255), somedate date);
+h) grant all privileges on <db-name>.* to ''@'localhost';
+
+
+2. Import data from MySQL table to HDFS, please omit angular brackets below (<table-name>):
+
+sqoop import --connect jdbc:mysql://localhost/<db-name> --driver com.mysql.jdbc.Driver --table <table-name> -m 1
+
+3. Import data from MySQL table to Hive table:
+
+sqoop import --connect jdbc:mysql://localhost/<db-name> --driver com.mysql.jdbc.Driver --table <table-name> -m 1 --hive-import
+
+4. Export data from Hive to MySql table:
+
+sqoop export --connect jdbc:mysql://localhost/<db-name> -m 1 --driver com.mysql.jdbc.Driver --table <table-name> --export-dir /apps/hive/warehouse/<hive-table-name> --input-fields-terminated-by '\0001'
+
+

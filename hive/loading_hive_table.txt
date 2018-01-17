@@ -1,0 +1,123 @@
+*************************************************************************************************************************
+Scenario #1: Upload data from HDFS file to Hive table. Use Ambari to load a '|' delimited file to some hdfs location.
+
+Step 1: create a hive table:
+hive> create table table_hdfs_source (a int, b string) Row Format Delimited Fields Terminated By '|';
+
+Step 2: now load data from the hdfs file to hive table:
+hive> load data inpath '/user/maria_dev/hive_hands_on/hive_test_file.txt' into table table_hdfs_source;
+
+Step 3: you can verify data by running below query:
+hive> select * from table_hdfs_source;
+
+
+*************************************************************************************************************************
+Scenario #2: Upload data from local file system (not hdfs) to hive table. 
+
+Step 1: create a hive table:
+hive> create table table_local_source (a int, b string) Row Format Delimited Fields Terminated By '|';
+
+Step 2: Let's move hdfs file to local file system. Follow below steps -
+
+Come out of hive.
+hive> Exit;
+
+Now create a directory in local system as hive_hands_on.
+$ mkdir hive_hands_on
+
+Now move file from hdfs to local file system.
+$ hadoop fs -copyToLocal /user/maria_dev/hive_hands_on/hive_test_file.txt /home/maria_dev/hive_hands_on
+
+Step 3: now load data from the file located at local file system to hive table:
+hive> load data local inpath '/home/maria_dev/hive_hands_on/hive_test_file.txt' into table table_local_source;
+
+Note: The only difference is the "local" key word.
+
+Step 4: you can verify data by running below query:
+hive> select * from table_local_source;
+
+*************************************************************************************************************************
+Scenario #3: Create a hive table using select query.
+
+Step 1: Let's create a new table "table_query_source_1" using existing table "table_local_source":
+hive> create table table_query_source_1 as select * from table_local_source;
+
+*************************************************************************************************************************
+Scenario #4: Insert rows into existing Hive table "table_query_source_1" using select query:
+
+Step 1: Follow code will append data to existing records:
+hive> insert into table_query_source_1 select * from table_local_source;
+
+Step 2: If you want to overwrite existing table with the new records, follow below code:
+hive> insert overwrite table table_query_source_1 select * from table_local_source;
+
+*************************************************************************************************************************
+Scenario #5: Load a compressed data file into a Hive table
+
+Step 1: I created a gun zipped file using 7 zip software and uploaded it in hdfs file system 
+	@ /user/maria_dev/hive_hands_on/hive_test_file.txt.gz using Ambari.
+
+Step 2: Let's create a new table "table_gz":
+hive> create table table_gz(a int, b string) Row Format Delimited Fields Terminated By '|' Lines Terminated By '\n';
+
+Step 3: Now load data into the table from the gz file:
+hive> LOAD DATA INPATH '/user/maria_dev/hive_hands_on/hive_test_file.txt.gz' INTO TABLE table_gz;
+
+Step 4: Verify by going to underlying file system of the hive table "table_gz":
+You can go via ambary at home >> apps >> hive >> warehouse >> table_gz and you can see hive_test_file.txt.gz 
+file which is source of the hive table.
+
+*************************************************************************************************************************
+Scenario #6: In this scenario we will use more effecient method as Hadoop will not be able to split your file into 
+	     chunks/blocks and run multiple maps in parallel. This can cause underutilization of your cluster's 'mapping' 
+	     power.The recommended practice is to insert data into another table, which is stored as a SequenceFile. 
+	     A SequenceFile can be split by Hadoop and distributed across map jobs whereas a GZIP file cannot be. 
+
+
+Step 1: Let's create a new table "table_gz_1":
+hive> create table table_gz_1(a int, b string) Row Format Delimited Fields Terminated By '|' Lines Terminated By '\n'; 
+
+Step 2: CREATE TABLE table_gz_sequence (a int, b string) STORED AS SEQUENCEFILE;
+
+Step 3: Now load data into the table from the gz file:
+hive> LOAD DATA INPATH '/user/maria_dev/hive_hands_on/hive_test_file.txt.gz' INTO TABLE table_gz_1; 
+
+Step 4: Run below command:
+hive> SET hive.exec.compress.output=true;
+
+Step 5: Insert into sequence table:
+hive> INSERT OVERWRITE TABLE table_gz_sequence SELECT * FROM table_gz_1;
+
+Step 6: verify data in the table.
+hive> select * from table_gz_sequence;
+
+*************************************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
