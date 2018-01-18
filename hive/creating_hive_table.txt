@@ -1,0 +1,48 @@
+*************************************************************************************************************************
+Scenario #1: Define a Hive-managed table
+
+Step 1: Go to Hive.
+hive>
+
+Step 2: Create a Hive managed table using below code:
+hive> CREATE TABLE hive_managed_table (a int, b string)
+      ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+
+Step 3: You can verify it by -
+
+hive> show tables;
+
+You can also see more details about the meta data of the table by below command:
+
+hive> describe formatted hive_managed_table;
+
+
+Note: There could be many variations and options to create hive managed tables which we will see in the below mentioned 
+      scenarios.
+*************************************************************************************************************************
+Scenario #2: Define a Hive external table
+
+Step 1: I've a file @ '/user/maria_dev/hive_hands_on/hive_test_file.txt', if not we can get a new file to any external 
+	location.
+
+Step 2: Go to Hive.
+$>hive;
+
+Step 3: Create a Hive external table using below code:
+
+hive> CREATE EXTERNAL TABLE hive_external_table (a int, b string)
+      ROW FORMAT DELIMITED FIELDS TERMINATED BY '|'
+      LOCATION '/user/maria_dev/hive_hands_on';
+
+Step 3: Run below command and check the data:
+
+hive> select * from hive_external_table;
+
+You can also see more details about the meta data of the table by below command:
+
+hive> describe formatted hive_external_table;
+
+Note: 1. There are 2 extra keywords which are mandatory - a) EXTERNAL b)LOCATION
+      2. If you drop external hive table the underlying file will not be deleted but if it's hive managed table the 
+	 underlying file will also be deleted.
+*************************************************************************************************************************
