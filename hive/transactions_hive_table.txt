@@ -1,0 +1,53 @@
+*************************************************************************************************************************
+Scenario #1: Insert a new row into a Hive table
+
+hive> create table t_tran (a int, b string) row format delimited fields terminated by ',' stored as textfile;
+hive> insert into t_tran (a,b) values(1,'a');
+
+If you do multiple insert there are multiple files created in the hdfs. run below -
+hive> insert into t_tran (a,b) values(2,'b');
+hive> insert into t_tran (a,b) values(3,'c');
+
+hive> dfs -ls hdfs://sandbox-hdp.hortonworks.com:8020/apps/hive/warehouse/t_tran;
+
+I guess these 3 files will be merged after sometime. Need to dig into this more.
+*************************************************************************************************************************
+Scenario #2: Update a row in a Hive table
+
+Insert operation is straightforward in Hive whereas there are some limitation with Updates & Deletes.
+
+Limitations:
+a) Only ORC file format is supported
+b) Bucketting is must
+c) Transactions must be set to On
+d) Bucketted column cannot be updated
+
+Run below code and you will see error -
+hive> update t_tran set b='x';
+Error - FAILED: SemanticException [Error 10297]: Attempt to do update or delete on table default.t_insert that 
+	does not use an AcidOutputFormat or is not bucketed
+
+Let's drop this table and create it again with desired conditions:
+hive> drop table t_tran;
+
+hive> create table t_tran(a int, b string) 
+	row format delimited fields terminated by ',' 
+	clustered by (a) into 4 buckets
+	stored as ORC
+	tblproperties ('transactional'='true');
+
+Let's insert some data -
+hive> insert into t_tran (a,b) values(1,'a');
+hive> insert into t_tran (a,b) values(2,'b');
+hive> insert into t_tran (a,b) values(3,'a');
+
+Let's update now -
+hive>update t_tran set b='x' where a =3;
+
+check files in the file system. it creates delta file which are merged at some point of time.
+
+*************************************************************************************************************************
+Scenario #3: Delete a row from a Hive table
+hive> delete from t_tran where a = 3;
+
+*************************************************************************************************************************
