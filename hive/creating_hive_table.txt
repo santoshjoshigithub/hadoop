@@ -11,12 +11,9 @@ hive> CREATE TABLE hive_managed_table (a int, b string)
 Step 3: You can verify it by -
 
 hive> show tables;
-
 You can also see more details about the meta data of the table by below command:
 
 hive> describe formatted hive_managed_table;
-
-
 Note: There could be many variations and options to create hive managed tables which we will see in the below mentioned 
       scenarios.
 *************************************************************************************************************************
@@ -29,7 +26,6 @@ Step 2: Go to Hive.
 $>hive;
 
 Step 3: Create a Hive external table using below code:
-
 hive> CREATE EXTERNAL TABLE hive_external_table (a int, b string)
       ROW FORMAT DELIMITED FIELDS TERMINATED BY '|'
       LOCATION '/user/maria_dev/hive_hands_on';
@@ -37,12 +33,70 @@ hive> CREATE EXTERNAL TABLE hive_external_table (a int, b string)
 Step 3: Run below command and check the data:
 
 hive> select * from hive_external_table;
-
 You can also see more details about the meta data of the table by below command:
 
 hive> describe formatted hive_external_table;
-
 Note: 1. There are 2 extra keywords which are mandatory - a) EXTERNAL b)LOCATION
       2. If you drop external hive table the underlying file will not be deleted but if it's hive managed table the 
 	 underlying file will also be deleted.
 *************************************************************************************************************************
+Scenario #3: Define a partitioned Hive table
+
+Step 1: I've created a table order_details (product_key, customer_key, order_date, price)with some dummy data.
+
+hive> create table order_details(product_key int, customer_key int, order_date int, price float)
+	      row format delimited fields terminated by '|';
+
+hive> LOAD DATA INPATH '/user/maria_dev/hive_hands_on/order_details.txt' INTO TABLE order_details;
+Note: We will use this table as a source to create partion and bucket tables.
+
+Step 2: Let's create partition table first by order date:
+hive> CREATE TABLE order_partition(product_key int, customer_key int, price float) 
+      PARTITIONED BY (order_date int)
+      ROW FORMAT DELIMITED FIELDS TERMINATED BY '|'
+      STORED AS TEXTFILE;
+Note: syntax is very similar only additional key word is PARTITIONED BY and the column used (order_date) 
+      is not part of the create table list.
+
+Step 3: check the property of the table and get it's 
+	location (hdfs://sandbox-hdp.hortonworks.com:8020/apps/hive/warehouse/order_partition)
+hive> describe formatted order_partition;
+
+Step 4: check the location and see what is there, there shouldn't be any files lying over there.
+hive> dfs -ls hdfs://sandbox-hdp.hortonworks.com:8020/apps/hive/warehouse/order_partition;
+
+Step 5: Let's insert data into partitioned table from the source table order_details we loaded in step 1:
+hive> INSERT INTO TABLE order_partition PARTITION (order_date)
+      SELECT product_key, customer_key, price, substr(order_date,1,6) FROM order_details;
+Note: you might get an error as -	
+	FAILED: SemanticException [Error 10096]: Dynamic partition strict mode requires at least 
+	one static partition column. To turn this off set hive.exec.dynamic.partition.mode=nonstrict
+
+Step 6: Run set hive.exec.dynamic.partition.mode below will be output:
+hive.exec.dynamic.partition.mode=strict
+
+Step 7: Let's set it to nonstrict by running below command: 
+hive> set hive.exec.dynamic.partition.mode=nonstrict;
+
+Step 8: Follow Step 5 again (remember order in insert statementis very important, partition column in the select 
+	clause should be at the last)
+
+Step 9: Repeat step 4 and now you will see many partitions based on each month (total 38), you can also check 
+	this through Amabari!
+
+*************************************************************************************************************************
+Scenario #4: Define a bucketed Hive table
+
+Step 1: Let's create a bucketed hive table, bucketed by customer_id:
+hive> CREATE TABLE order_bucket (product_key INT, customer_key INT, order_date INT, price FLOAT)
+      CLUSTERED BY (customer_key) INTO 4 BUCKETS
+      ROW FORMAT DELIMITED FIELDS TERMINATED BY '|'
+      STORED AS TEXTFILE;
+
+Step 2: INSERT INTO TABLE order_bucket SELECT product_key, customer_key, order_date, price FROM order_details;
+
+Note: if you go to the underlying file system you won't see many files unlike partion table, this is because
+	set hive.enforce.bucketing is set to false, set it to true and then you can see many files having
+	count as bucket number.
+*************************************************************************************************************************
+
