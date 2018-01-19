@@ -99,4 +99,21 @@ Note: if you go to the underlying file system you won't see many files unlike pa
 	set hive.enforce.bucketing is set to false, set it to true and then you can see many files having
 	count as bucket number.
 *************************************************************************************************************************
+Scenario #5: Define a Hive table from a select query (CTAS)
+hive> create table table_ctas 
+	row format delimited fields terminated by '|'
+	stored as textfile	
+	as select * from order_details;
+*************************************************************************************************************************
+Scenario #6: Define a Hive table that uses the ORCFile format
+hive> create table table_orc (a int, b float)
+	row format delimited fields terminated by ','
+	stored as orc;
+*************************************************************************************************************************
+Scenario #7: Create a new ORCFile table from the data in an existing non-ORCFile Hive table
+hive> create table table_orc_1
+	row format delimited fields terminated by '|'
+	stored as orc
+	as select * from order_details;
 
+*************************************************************************************************************************
