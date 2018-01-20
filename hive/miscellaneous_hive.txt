@@ -1,0 +1,38 @@
+*************************************************************************************************************************
+Scenario #1: Join two Hive tables
+I've created 2 hive tables, dim_product and dim_customer. order_details is already there and could be treated as a fact
+table. Let's create a quick join query - find list of products and their total sales.
+
+hive>select p.product_name, sum(f.price)as total_sales
+	from order_details as f inner join dim_product as p on f.product_key = p.product_key
+	group by p.product_name;
+
+HiveQL syntax is almost same as T-SQL.
+*************************************************************************************************************************
+Scenario #2: Run a Hive query using Tez
+Hive execution engine could be either MR or Tez (may be spark too). Let's check what that is set.
+hive>set hive.execution.engine;
+
+It was already tez.Let's set to mr and run query of scenario #1.
+
+hive>set hive.execution.engine=mr;
+
+The query ran in MR mode in 43+ seconds. Let's change the mode to tez.
+
+hive>set hive.execution.engine=tez;
+
+The query in tez was super fast, it completed in 9+ seconds.
+*************************************************************************************************************************
+Scenario #3: Run a Hive query using vectorization
+
+<to be done>
+
+*************************************************************************************************************************
+Scenario #4: Output the execution plan for a Hive query
+
+hive> explain <any query>
+
+*************************************************************************************************************************
+Scenario #5: 
+
+*************************************************************************************************************************
