@@ -1,0 +1,36 @@
+Step 1: Create a file hello_pig.txt with content as hello pig!!
+vi hello_pig.txt, type hello pig!! and quit.
+
+Step 2: Move this file from Linux system to HDFS system.
+hadoop fs -put hello_pig.txt /user/maria_dev/hive_hands_on/
+
+Step 3: Let's launch pig, by typing simply pig. You will be enter to grunt.
+grunt>
+
+Step 4: Let's the load the file and then show it as output.
+grunt> r = load '/user/maria_dev/hive_hands_on/hello_pig.txt';
+grunt> dump r;
+
+After the exectuion of the mappers and reducers internally, you will be prompted with
+"hello pig!!"
+
+Step 5: Let's save this script using vi editor or any other editors.
+first quit grunt.
+grunt>quit;
+
+launch vi editor.
+$> vi first_pig.pig 
+Note - saving file as *.pig is optional.
+
+copy paste the code and write and exit vi editor by typing esc then wq enter.
+r = load '/user/maria_dev/hive_hands_on/hello_pig.txt';
+dump r;
+
+Test if the file has proper code or not.
+$>cat first_pig, you should see the code you have written in the file.
+
+Step 6: let's execute this pig script from grunt.
+grunt> exec first_pig.pig;
+
+Step 7:let's execute pig from the root prompt -
+grunt> pig -f first_pig.pig
