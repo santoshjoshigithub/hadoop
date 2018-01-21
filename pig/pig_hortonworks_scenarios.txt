@@ -1,0 +1,56 @@
+*********************************************************************************************
+Scenario #1:Load data into a Pig relation without a schema
+launch pig.
+grunt>movies = LOAD '/user/maria_dev/sqoop_movielens/movies' using PigStorage(',');
+
+You are done, a relation movies has been created without a schema. To verify this -
+grunt> describe movies;
+
+And output is -
+Schema for movies unknown.
+
+Index or positional notation is used to access each column e.g. $0, $1 etc.
+Let's see an example:
+
+grunt>movies_id = FOREACH movies GENERATE (int)$0;
+
+*********************************************************************************************
+Scenario #2:Load data into a Pig relation with a schema
+
+*********************************************************************************************
+Scenario #3:Load data from a Hive table into a Pig relation
+
+*********************************************************************************************
+Scenario #4:Use Pig to transform data into a specified format
+
+*********************************************************************************************
+Scenario #5:Transform data to match a given Hive schema
+
+*********************************************************************************************
+Scenario #6:Group the data of one or more Pig relations
+
+*********************************************************************************************
+Scenario #7:Use Pig to remove records with null values from a relation
+
+*********************************************************************************************
+Scenario #8:Store the data from a Pig relation into a folder in HDFS
+
+*********************************************************************************************
+Scenario #9:Store the data from a Pig relation into a Hive table
+
+*********************************************************************************************
+Scenario #10:Sort the output of a Pig relation
+
+*********************************************************************************************
+Scenario #11:Remove the duplicate tuples of a Pig relation
+
+*********************************************************************************************
+Scenario #12:Specify the number of reduce tasks for a Pig MapReduce job
+
+*********************************************************************************************
+Scenario #13:Join two datasets using Pig
+
+*********************************************************************************************
+Scenario #14:Perform a replicated join using Pig
+
+*********************************************************************************************

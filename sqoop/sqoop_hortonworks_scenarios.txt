@@ -61,3 +61,12 @@ b) Update:
 do this later..
 
 *************************************************************************************************************************
+Scenario #6: Import all the tables from the movielens db from mysql to hdfs:
+sqoop import-all-tables \
+--connect jdbc:mysql://localhost:3306/movielens \
+--driver com.mysql.jdbc.Driver \
+--username root \
+--password hadoop \
+--warehouse-dir /user/maria_dev/sqoop_movielens
+
+*************************************************************************************************************************
