@@ -1,7 +1,6 @@
 *************************************************************************************************************************
 Scenario #1: Join two Hive tables
-I've created 2 hive tables, dim_product and dim_customer. order_details is already there and could be treated as a fact
-table. Let's create a quick join query - find list of products and their total sales.
+I've created 2 hive tables, dim_product and dim_customer. order_details is already there and could be treated as a fact table. Let's create a quick join query - find list of products and their total sales.
 
 hive>select p.product_name, sum(f.price)as total_sales
 	from order_details as f inner join dim_product as p on f.product_key = p.product_key

@@ -5,9 +5,59 @@ sqoop import \
 --connect jdbc:mysql://localhost:3306/movielens \
 --driver com.mysql.jdbc.Driver \
 --username root \
---password hadoop \ 
+--password hadoop \
+--table movies -m 1 \
+--as-textfile \
+--target-dir=sqoop_hands_on
+
+Note:
+a) default username and password for hortonworks sandbox is root & hadoop.
+b) default port # is 3306.
+c) -m 1 tell how many mappers are there in the execution. If you have put 4 there will be	
+   4 mappers in the execution of the above command. Default count of mappers is also 4. 
+*************************************************************************************************************************
+Scenario #2: Import the results of a query from a relational database into HDFS
+
+sqoop import \
+--connect jdbc:mysql://localhost:3306/movielens \
+--driver com.mysql.jdbc.Driver \
+--username root \
+--password hadoop \
+--query 'select * from movies where $CONDITIONS' \
+--split-by id \
+--as-textfile \
+--target-dir=sqoop_hands_on_query 
+*************************************************************************************************************************
+Scenario #3: Import a table from a relational database into a new or existing Hive table (new table)
+
+sqoop import \
+--connect jdbc:mysql://localhost:3306/movielens \
+--driver com.mysql.jdbc.Driver \
+--username root \
+--password hadoop \
 --table movies \
 --as-textfile \
---target-dir=user/maria_dev/hive_hands_on \
- 
+--hive-import
+*************************************************************************************************************************
+Scenario #4: Import a table from a relational database into a new or existing Hive table (existing stable)
+
+to be done later..
+*************************************************************************************************************************
+Scenario #5: Insert or update data from HDFS into a table in a relational database (Sqoop Export)
+
+Let's create a table in MySql:
+mysql> create table dim_product (product_key int, product_name varchar(255));
+
+a) Insert:
+sqoop export \
+--connect jdbc:mysql://localhost/rnd -m 1 \
+--driver com.mysql.jdbc.Driver \
+--table t_tran\
+--export-dir /apps/hive/warehouse/t_tran \
+--input-fields-terminated-by ','
+
+
+b) Update:
+do this later..
+
 *************************************************************************************************************************
