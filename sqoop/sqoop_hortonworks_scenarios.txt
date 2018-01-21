@@ -1,6 +1,13 @@
 *************************************************************************************************************************
 Scenario #1: Import data from a table in a relational database into HDFS
 
-
-Step 1: 
+sqoop import \
+--connect jdbc:mysql://localhost:3306/movielens \
+--driver com.mysql.jdbc.Driver \
+--username root \
+--password hadoop \ 
+--table movies \
+--as-textfile \
+--target-dir=user/maria_dev/hive_hands_on \
+ 
 *************************************************************************************************************************
