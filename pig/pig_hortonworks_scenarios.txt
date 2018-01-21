@@ -17,6 +17,14 @@ grunt>movies_id = FOREACH movies GENERATE (int)$0;
 *********************************************************************************************
 Scenario #2:Load data into a Pig relation with a schema
 
+grunt>movies = LOAD '/user/maria_dev/sqoop_movielens/movies' using PigStorage(',')
+AS (id: INT, title: CHARARRAY, release_date: DATE);
+
+grunt> describe movies;
+movies: {id: int,title: chararray,release_date: chararray}
+
+grunt>movies_id = FOREACH movies GENERATE id;
+grun>DUMP movies_id;
 *********************************************************************************************
 Scenario #3:Load data from a Hive table into a Pig relation
 
