@@ -24,24 +24,56 @@ grunt> describe movies;
 movies: {id: int,title: chararray,release_date: chararray}
 
 grunt>movies_id = FOREACH movies GENERATE id;
-grun>DUMP movies_id;
+grunt>DUMP movies_id;
+
 *********************************************************************************************
 Scenario #3:Load data from a Hive table into a Pig relation
+
+Launch Pig with HCatalog as pig -useHCatalog
+grunt>
+
+Let's access Hive now..
+grunt>dim_customer = LOAD 'dim_customer' USING org.apache.hive.hcatalog.pig.HCatloader();
+
+Note - in the sandbox there was an error, check it later.
+ls: cannot access /usr/hdp/2.6.3.0-235/hive/lib/slf4j-api-*.jar: No such file or directory
+ls: cannot access /usr/hdp/2.6.3.0-235/hive-hcatalog/lib/*hbase-storage-handler-*.jar: 
+No such file or directory
 
 *********************************************************************************************
 Scenario #4:Use Pig to transform data into a specified format
 
+check this later..
+
 *********************************************************************************************
 Scenario #5:Transform data to match a given Hive schema
+
+Just try to understand mapping between Hive's and Pig's datatypes. will put mapping below soon.
 
 *********************************************************************************************
 Scenario #6:Group the data of one or more Pig relations
 
+grunt> a = LOAD '/apps/hive/warehouse/xademo.db/customer_details' USING PigStorage('|');
+
+remove column headers from the input..
+grunt> a_no_header = FILTER a BY $0 != 'PHONE_NUM';
+
+grunt> a_group = GROUP a_no_header ALL;
+grunt> a_total_count = FOREACH a_group GENERATE COUNT_STAR(a_no_header)as total_cnt;
+grunt> DUMP a_total_count;
 *********************************************************************************************
 Scenario #7:Use Pig to remove records with null values from a relation
 
+grunt> a = LOAD '/apps/hive/warehouse/xademo.db/customer_details' USING PigStorage('|');
+grunt> a_no_header = FILTER a BY $0 != 'PHONE_NUM';
+grunt> a_no_nulls = FILTER a_no_header BY ($5 IS NOT NULL);
+grunt> a_group = GROUP a_no_nulls ALL;
+grunt> a_count = FOREACH a_group GENERATE COUNT_STAR(a_no_nulls) as cnt;
+grunt> DUMP a_count;
 *********************************************************************************************
 Scenario #8:Store the data from a Pig relation into a folder in HDFS
+
+
 
 *********************************************************************************************
 Scenario #9:Store the data from a Pig relation into a Hive table
