@@ -73,7 +73,33 @@ grunt> DUMP a_count;
 *********************************************************************************************
 Scenario #8:Store the data from a Pig relation into a folder in HDFS
 
+grunt> a = LOAD '/apps/hive/warehouse/xademo.db/customer_details' USING PigStorage('|');
 
+Run below command to check if the directory where Pig Relation "a" will be stored..
+grunt> fs -ls /user/root/customer;
+
+The directory is missing..
+ls: `/user/root/customer': No such file or directory
+
+Following command will also create the directory..
+grunt> STORE a INTO '/user/root/customer';
+
+Now check the directory again..
+grunt> fs -ls /user/root/customer;
+
+Let's check what is inside the file..
+grunt> fs -cat /user/root/customer/part*;
+
+Let's delete the directory..
+grunt> fs -rm -R /user/root/customer;
+
+Let's load the file again but with some variation..
+grunt> STORE a INTO '/user/root/customer' USING PigStorage('*');
+
+Let's check what is inside the file again..
+grunt> fs -cat /user/root/customer/part*;
+
+You can also store file as BinStorage. Explore this later.
 
 *********************************************************************************************
 Scenario #9:Store the data from a Pig relation into a Hive table
