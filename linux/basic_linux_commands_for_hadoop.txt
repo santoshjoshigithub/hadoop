@@ -1,0 +1,85 @@
+lfs = local file system
+hdfs = hadoop file system
+
+1. check a directory in LFS:
+	$ ls
+
+	$ ls <directory_path>
+
+2. check a directory in HDFS:
+	$ hadoop fs -ls
+
+	$ hadoop fs -ls <directory_path>
+
+3. create a directory in LFS:
+	$ mkdir test_santosh
+
+4. create a file inside test_santosh:
+	$ vi test_santosh/test_file.txt
+	type something..."hello hadoop" ==> Press Esc  ==> Press : ==> type wq ==> hit enter
+	wq is write and quit.
+
+5. Let's ls it.
+	$ ls test_santosh
+	You will see test_file.txt
+
+6. Let's see the content of the file:
+	$ cat test_santosh/test_file.txt
+	Hello Hadoop
+
+7. Let's delete this file - "test_file.txt":
+	$ rm test_santosh/test_file.txt
+	rm: remove regular file `test_santosh/test_file.txt'? y
+	[maria_dev@sandbox-hdp ~]$ cat test_santosh/test_file.txt
+
+8. Let's delete the directory "test_santosh":
+	$ rmdir test_santosh/
+
+9. Let's make a directory in HDFS:
+	$ hadoop fs -mkdir test_hdfs
+
+10. Let's check what is there in the directory:
+	$ hadoop fs -ls test_hdfs
+	There is nothing, good!
+
+11. Let's create a directory again in LFS and put a test file over there:
+	$ mkdir local_test
+	$ vi local_test/local_file.txt (follow step 4 above)
+
+12. Let's copy this file from LFS to HDFS:
+	$ hadoop fs -copyFromLocal local_test/local_file.txt test_hdfs/
+	
+	$ hadoop fs -ls test_hdfs
+	Found 1 items
+	-rw-r--r--   1 maria_dev hdfs         15 2018-01-24 02:59 test_hdfs/local_file.txt
+
+13. Let's change the content of the source at LFS:
+	$ vi local_test/local_file.txt
+	$ cat local_test/local_file.txt
+	Hello Hadoop!!
+	There are some updates..
+    
+	Now overwrite this change at the target in HDFS:
+	$ hadoop fs -copyFromLocal local_test/local_file.txt test_hdfs
+	copyFromLocal: `test_hdfs/local_file.txt': File exists
+
+	Let's use -f switch:
+	$ hadoop fs -copyFromLocal -f local_test/local_file.txt test_hdfs
+
+	Let's check the content of the file at the HDFS:
+	$ hadoop fs -cat test_hdfs/*
+	Hello Hadoop!!
+	There are some updates..
+
+
+	
+
+		
+
+
+	
+	
+
+
+
+	
