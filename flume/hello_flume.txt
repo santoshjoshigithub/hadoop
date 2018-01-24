@@ -1,0 +1,8 @@
+>> Apache Flume is a distributed, reliable, and available system for efficiently collecting, aggregating and moving large amounts of log data from many different sources to a centralized data store.
+
+>> An Agent consists of Source, Channel & Sink.
+
+>> Flume agent configuration is stored in a local configuration file.The configuration file includes properties of each source, sink and channel in an agent and how they are wired together to form data flows.
+
+Scenario #1: Given a Flume configuration file, start a Flume agent
+

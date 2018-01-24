@@ -75,6 +75,10 @@ hdfs = hadoop file system
 	
 
 		
+ToDo List:
+1. wget command:
+2. less example
+telnet
 
 
 	
