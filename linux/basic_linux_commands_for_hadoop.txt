@@ -79,6 +79,9 @@ ToDo List:
 1. wget command:
 2. less example
 telnet
+find / -name "piggybank*.jar"
+sudo
+
 
 
 	

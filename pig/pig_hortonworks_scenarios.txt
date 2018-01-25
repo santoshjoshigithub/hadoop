@@ -102,21 +102,43 @@ grunt> fs -cat /user/root/customer/part*;
 You can also store file as BinStorage. Explore this later.
 
 *********************************************************************************************
-Scenario #9:Store the data from a Pig relation into a Hive table
+Scenario #9:
+a) Within a Pig script, register a JAR file of User Defined Functions
+b) Within a Pig script, define an alias for a User Defined Function
+c) Within a Pig script, invoke a User Defined Function
 
-*********************************************************************************************
-Scenario #10:Sort the output of a Pig relation
+Let's find some *.jar files.
+	$ sudo find / -name "*piggybank*.jar"
 
-*********************************************************************************************
-Scenario #11:Remove the duplicate tuples of a Pig relation
+	/usr/hdp/2.6.3.0-235/pig/piggybank.jar
+	/usr/hdp/2.6.3.0-235/pig/lib/piggybank.jar
+	/hadoop/yarn/local/filecache/14/pig.tar.gz/pig/lib/piggybank.jar
+	/hadoop/yarn/local/filecache/14/pig.tar.gz/pig/contrib/piggybank/java/piggybank.jar
 
-*********************************************************************************************
-Scenario #12:Specify the number of reduce tasks for a Pig MapReduce job
+Let's register the jar file located @ /usr/hdp/2.6.3.0-235/pig/piggybank.jar
 
-*********************************************************************************************
-Scenario #13:Join two datasets using Pig
+First launch pig and then register at Grunt:
+	grunt> REGISTER /usr/hdp/2.6.3.0-235/pig/piggybank.jar
 
-*********************************************************************************************
-Scenario #14:Perform a replicated join using Pig
+Let's sneek peak inside this jar file first by quitting Grunt and checking the content:
+	$ jar tvf /usr/hdp/2.6.3.0-235/pig/piggybank.jar
 
+so we saw there is a UPPER class to covert a character to upper case in the jar file.
+Let's make an alias UPPER_CASE using below command:
+	grunt> DEFINE UPPER_CASE org.apache.pig.piggybank.evaluation.string.UPPER;
+
+The fully qualified path of UPPER is found from the jar file as below -
+	org/apache/pig/piggybank/evaluation/string/UPPER.class
+Note: we need to omit "/" and instead use ".", also omit the suffix ".class".
+
+Now let's use this alias in pig transformation:
+	
+	grunt> x = LOAD '/user/maria_dev/sqoop_movielens/movies' using PigStorage(',');
+	grunt> x_limit = LIMIT a 10;
+	grunt> y = FOREACH x_limit GENERATE $1 AS  normal_case, UPPER_CASE($1) AS upper_case;
+	grunt> DUMP y;
+
+Now you will see that first column is in lower case but the second column is in the upper case.
+
+Here we have implemented all the 3 scenarios!
 *********************************************************************************************
