@@ -45,7 +45,6 @@ Let's update now -
 hive>update t_tran set b='x' where a =3;
 
 check files in the file system. it creates delta file which are merged at some point of time.
-
 *************************************************************************************************************************
 Scenario #3: Delete a row from a Hive table
 hive> delete from t_tran where a = 3;

@@ -68,11 +68,7 @@ You can go via ambary at home >> apps >> hive >> warehouse >> table_gz and you c
 file which is source of the hive table.
 
 *************************************************************************************************************************
-Scenario #6: In this scenario we will use more effecient method as Hadoop will not be able to split your file into 
-	     chunks/blocks and run multiple maps in parallel. This can cause underutilization of your cluster's 'mapping' 
-	     power.The recommended practice is to insert data into another table, which is stored as a SequenceFile. 
-	     A SequenceFile can be split by Hadoop and distributed across map jobs whereas a GZIP file cannot be. 
-
+Scenario #6: In this scenario we will use more effecient method as Hadoop will not be able to split your file into chunks/blocks and run multiple maps in parallel. This can cause underutilization of your cluster's 'mapping'power.The recommended practice is to insert data into another table, which is stored as a SequenceFile.A SequenceFile can be split by Hadoop and distributed across map jobs whereas a GZIP file cannot be. 
 
 Step 1: Let's create a new table "table_gz_1":
 hive> create table table_gz_1(a int, b string) Row Format Delimited Fields Terminated By '|' Lines Terminated By '\n'; 

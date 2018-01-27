@@ -4,10 +4,10 @@ vi hello_pig.txt, type hello pig!! and quit.
 Step 2: Move this file from Linux system to HDFS system.
 hadoop fs -put hello_pig.txt /user/maria_dev/hive_hands_on/
 
-Step 3: Let's launch pig, by typing simply pig. You will be enter to grunt.
+Step 3: Let's launch pig, by typing simply pig. You will be in a shell - grunt.
 grunt>
 
-Step 4: Let's the load the file and then show it as output.
+Step 4: Let's load the file and then show it as output.
 grunt> r = load '/user/maria_dev/hive_hands_on/hello_pig.txt';
 grunt> dump r;
 

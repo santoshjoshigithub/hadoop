@@ -33,12 +33,12 @@ Launch Pig with HCatalog as pig -useHCatalog
 grunt>
 
 Let's access Hive now..
-grunt>dim_customer = LOAD 'dim_customer' USING org.apache.hive.hcatalog.pig.HCatloader();
+grunt>  r = LOAD 'xademo.customer_details' USING org.apache.hive.hcatalog.pig.HCatLoader();
+grunt> top10 = LIMIT r 10;
+grunt> DUMP top10;
 
-Note - in the sandbox there was an error, check it later.
-ls: cannot access /usr/hdp/2.6.3.0-235/hive/lib/slf4j-api-*.jar: No such file or directory
-ls: cannot access /usr/hdp/2.6.3.0-235/hive-hcatalog/lib/*hbase-storage-handler-*.jar: 
-No such file or directory
+grunt> DESCRIBE r;
+r: {phone_number: chararray,plan: chararray,rec_date: chararray,status: chararray,balance: chararray,imei: chararray,region: chararray}
 
 *********************************************************************************************
 Scenario #4:Use Pig to transform data into a specified format

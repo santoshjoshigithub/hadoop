@@ -14,13 +14,11 @@ hive> show tables;
 You can also see more details about the meta data of the table by below command:
 
 hive> describe formatted hive_managed_table;
-Note: There could be many variations and options to create hive managed tables which we will see in the below mentioned 
-      scenarios.
+Note: There could be many variations and options to create hive managed tables which we will see in the below mentioned scenarios.
 *************************************************************************************************************************
 Scenario #2: Define a Hive external table
 
-Step 1: I've a file @ '/user/maria_dev/hive_hands_on/hive_test_file.txt', if not we can get a new file to any external 
-	location.
+Step 1: I've a file @ '/user/maria_dev/hive_hands_on/hive_test_file.txt', if not we can get a new file to any external location at hdfs.
 
 Step 2: Go to Hive.
 $>hive;
@@ -37,8 +35,7 @@ You can also see more details about the meta data of the table by below command:
 
 hive> describe formatted hive_external_table;
 Note: 1. There are 2 extra keywords which are mandatory - a) EXTERNAL b)LOCATION
-      2. If you drop external hive table the underlying file will not be deleted but if it's hive managed table the 
-	 underlying file will also be deleted.
+      2. If you drop external hive table the underlying file will not be deleted but if it's hive managed table the underlying file will also be deleted.
 *************************************************************************************************************************
 Scenario #3: Define a partitioned Hive table
 
@@ -78,12 +75,10 @@ hive.exec.dynamic.partition.mode=strict
 Step 7: Let's set it to nonstrict by running below command: 
 hive> set hive.exec.dynamic.partition.mode=nonstrict;
 
-Step 8: Follow Step 5 again (remember order in insert statementis very important, partition column in the select 
-	clause should be at the last)
+Step 8: Follow Step 5 again (remember order in insert statement is very important, partition column in the select clause should be at the last)
 
 Step 9: Repeat step 4 and now you will see many partitions based on each month (total 38), you can also check 
 	this through Amabari!
-
 *************************************************************************************************************************
 Scenario #4: Define a bucketed Hive table
 
@@ -115,5 +110,4 @@ hive> create table table_orc_1
 	row format delimited fields terminated by '|'
 	stored as orc
 	as select * from order_details;
-
 *************************************************************************************************************************

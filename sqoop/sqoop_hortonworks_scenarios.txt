@@ -39,7 +39,7 @@ sqoop import \
 --as-textfile \
 --hive-import
 *************************************************************************************************************************
-Scenario #4: Import a table from a relational database into a new or existing Hive table (existing stable)
+Scenario #4: Import a table from a relational database into a new or existing Hive table (existing table)
 
 to be done later..
 *************************************************************************************************************************
@@ -56,10 +56,8 @@ sqoop export \
 --export-dir /apps/hive/warehouse/t_tran \
 --input-fields-terminated-by ','
 
-
 b) Update:
 do this later..
-
 *************************************************************************************************************************
 Scenario #6: Import all the tables from the movielens db from mysql to hdfs:
 sqoop import-all-tables \
@@ -68,5 +66,4 @@ sqoop import-all-tables \
 --username root \
 --password hadoop \
 --warehouse-dir /user/maria_dev/sqoop_movielens
-
 *************************************************************************************************************************

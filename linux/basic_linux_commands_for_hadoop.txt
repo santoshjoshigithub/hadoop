@@ -81,7 +81,7 @@ ToDo List:
 telnet
 find / -name "piggybank*.jar"
 sudo
-
+jar tvf 
 
 
 	

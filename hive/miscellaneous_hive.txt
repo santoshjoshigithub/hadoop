@@ -35,12 +35,10 @@ hive> explain <any query>
 Scenario #5: Use a subquery within a Hive query
 hive> select count(*) as orphanage_customer_id from order_details f where f.customer_key 
 	not in (select customer_key from dim_customer);
-
 *************************************************************************************************************************
 Scenario #6: Output data from a Hive query that is totally ordered across multiple reducers
 hive> select p.product_name, sum(f.price)as total_sales
 	from order_details as f inner join dim_product as p on f.product_key = p.product_key
 	group by p.product_name
 	order by total_sales desc;
-
 *************************************************************************************************************************
