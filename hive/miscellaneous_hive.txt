@@ -24,8 +24,28 @@ The query in tez was super fast, it completed in 9+ seconds.
 *************************************************************************************************************************
 Scenario #3: Run a Hive query using vectorization
 
-<to be done>
+Vectorized query execution is a Hive feature that greatly reduces the CPU usage for typical query operations like scans, filters, aggregates, and joins. A standard query execution system processes one row at a time. This involves long code paths and significant metadata interpretation in the inner loop of execution. Vectorized query execution streamlines operations by processing a block of 1024 rows at a time.
 
+To use vectorized query execution, you must store your data in ORC format, and set the following variable as shown in Hive SQL (see Configuring Hive):
+
+set hive.vectorized.execution.enabled = true;
+
+Let's create an orc hive table.
+hive> create table t_orc (x int) stored as orc;
+
+Let's insert some data:
+hive> insert into t_orc (1);
+hive> insert into t_orc (2);
+hive> insert into t_orc (3);
+
+Set the property as explained earlier:
+hive> set hive.vectorized.execution.enabled = true;
+
+Now, run the plan:
+hive> explain select count(*) from t_orc;
+
+You will see Execution mode: vectorized.
+Note: In my case I was getting message as - "Plan not optimized by CBO.", will do research on this later.
 *************************************************************************************************************************
 Scenario #4: Output the execution plan for a Hive query
 
