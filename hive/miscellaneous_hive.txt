@@ -57,8 +57,24 @@ hive> select count(*) as orphanage_customer_id from order_details f where f.cust
 	not in (select customer_key from dim_customer);
 *************************************************************************************************************************
 Scenario #6: Output data from a Hive query that is totally ordered across multiple reducers
-hive> select p.product_name, sum(f.price)as total_sales
-	from order_details as f inner join dim_product as p on f.product_key = p.product_key
-	group by p.product_name
-	order by total_sales desc;
+
+Run below command in hive:
+	hive> set mapreduce.job.reduces;
+	mapreduce.job.reduces=-1
+
+Let's set it to 4 reducers:
+	mapreduce.job.reduces=4
+	hive> set mapreduce.job.reduces=4;
+
+Case 1: Order By:
+hive> create table t_order as select * from order_details order by product_key;
+
+Case 2: Sort By:
+hive> create table t_sort as select * from order_details sort by product_key;
+
+In first case only one reducer is used but in the second case you can use
+multiple reducers and hence it could be more effecient.
+
+Note:
+Hive supports SORT BY which sorts the data per reducer. The difference between "order by" and "sort by" is that the former guarantees total order in the output while the latter only guarantees ordering of the rows within a reducer. If there are more than one reducer, "sort by" may give partially ordered final results.
 *************************************************************************************************************************

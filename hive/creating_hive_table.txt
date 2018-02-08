@@ -99,6 +99,12 @@ hive> create table table_ctas
 	row format delimited fields terminated by '|'
 	stored as textfile	
 	as select * from order_details;
+
+CTAS has these restrictions:
+
+The target table cannot be a partitioned table.
+The target table cannot be an external table.
+The target table cannot be a list bucketing table.
 *************************************************************************************************************************
 Scenario #6: Define a Hive table that uses the ORCFile format
 hive> create table table_orc (a int, b float)

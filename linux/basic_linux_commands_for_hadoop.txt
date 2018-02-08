@@ -82,7 +82,8 @@ telnet
 find / -name "piggybank*.jar"
 sudo
 jar tvf 
-
+less movie.sql
+head and tail command to check the file content
 
 	
 	
